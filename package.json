@@ -1,5 +1,5 @@
 {
-  "name": "web-master-education-platform-workshop",
+  "name": "courses_proj",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,10 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@tailwindcss/vite": "^4.1.11",
+    "axios": "^1.10.0",
+    "formik": "^2.4.6",
+    "framer-motion": "^12.23.0",
+    "motion": "^12.23.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tailwindcss": "^4.1.11"
+    "react-router-dom": "^7.6.3",
+    "tailwindcss": "^4.1.11",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
