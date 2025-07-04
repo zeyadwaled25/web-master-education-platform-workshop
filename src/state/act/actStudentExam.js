@@ -1,13 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { eduAPI } from "../../utils/axiosInstance";
 
-export const addQuestion = createAsyncThunk(
-  "questionSlice/addQuestion",
-  async (questionData, thunkAPI) => {
+export const startExam = createAsyncThunk(
+  "studentExamSlice/startExam",
+  async ({ examId }, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
 
     try {
-      const res = await eduAPI.post("question", questionData, {
+      const res = await eduAPI.post(`studentExam/start/${examId}`, {
         headers: {
           token: localStorage.getItem("token"), // or 'Authorization': `Bearer ${token}` if using Bearer format
         },
@@ -20,13 +20,13 @@ export const addQuestion = createAsyncThunk(
     }
   }
 );
-export const updateQuestion = createAsyncThunk(
-  "questionSlice/updateQuestion",
-  async ({ questionId, ...questionData }, thunkAPI) => {
+export const submitExam = createAsyncThunk(
+  "studentExamSlice/submitExam",
+  async ({ examId, ...examdData }, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
 
     try {
-      const res = await eduAPI.put(`question/${questionId}`, questionData, {
+      const res = await eduAPI.post(`studentExam/submit/${examId}`, examdData, {
         headers: {
           token: localStorage.getItem("token"), // or 'Authorization': `Bearer ${token}` if using Bearer format
         },
@@ -39,13 +39,13 @@ export const updateQuestion = createAsyncThunk(
     }
   }
 );
-export const deleteQuestion = createAsyncThunk(
-  "questionSlice/deleteQuestion",
-  async ({ questionId }, thunkAPI) => {
+export const remainingTime = createAsyncThunk(
+  "studentExamSlice/remainingTime",
+  async ({ examId }, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
 
     try {
-      const res = await eduAPI.delete(`question/${questionId}`, {
+      const res = await eduAPI.get(`studentExam/remaining-time/${examId}`, {
         headers: {
           token: localStorage.getItem("token"), // or 'Authorization': `Bearer ${token}` if using Bearer format
         },
@@ -58,14 +58,13 @@ export const deleteQuestion = createAsyncThunk(
     }
   }
 );
-
-export const getQuestions = createAsyncThunk(
-  "questionSlice/getQuestions",
-  async (_, thunkAPI) => {
+export const getExamScoreAdmin = createAsyncThunk(
+  "studentExamSlice/getExamScoreAdmin",
+  async ({ examId }, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
 
     try {
-      const res = await eduAPI.get("question", {
+      const res = await eduAPI.get(`studentExam/exams/${examId}`, {
         headers: {
           token: localStorage.getItem("token"), // or 'Authorization': `Bearer ${token}` if using Bearer format
         },
@@ -78,13 +77,13 @@ export const getQuestions = createAsyncThunk(
     }
   }
 );
-export const getSpecificQuestion = createAsyncThunk(
-  "questionSlice/getSpecificQuestion",
-  async ({ questionId }, thunkAPI) => {
+export const getExamScoreToStudent = createAsyncThunk(
+  "studentExamSlice/getExamScoreToStudent",
+  async ({ examId }, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
 
     try {
-      const res = await eduAPI.get(`question/get/${questionId}`, {
+      const res = await eduAPI.get(`studentExam/exams/score/${examId}`, {
         headers: {
           token: localStorage.getItem("token"), // or 'Authorization': `Bearer ${token}` if using Bearer format
         },

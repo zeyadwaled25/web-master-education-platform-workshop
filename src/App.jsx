@@ -6,6 +6,7 @@ import Layout from "./components/Layout/Layout";
 import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
+import ResetPassword from "./components/ResetPassword/ResetPassword";
 
 function AppWrapper() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -36,6 +37,7 @@ function AppWrapper() {
         <Route path="/signup" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="/home"
           element={token ? <Layout /> : <Navigate to="/login" replace />}

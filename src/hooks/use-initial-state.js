@@ -39,7 +39,36 @@ function UseInitialStates() {
     specificQuestion: {},
   };
 
-  return { initialStateAuth, initialStateLesson, initialStateQuestion };
+  const initialStateExam = {
+    loadingAddExam: false,
+    loadingEditExam: false,
+    loadingDeleteExam: false,
+    loadingGetExams: false,
+    loadingGetExam: false,
+
+    allExams: [],
+    examError: "",
+    specificExam: {},
+  };
+  const initialStateStudentExam = {
+    loadingStartExam: false,
+    loadingSubmitExam: false,
+    loadingGetRemainingTime: false,
+    loadingGetExamScoreAdmin: false,
+    loadingGetExamScoreStudent: false,
+    adminExamsScore: [],
+    specificExamScore: {},
+    studentScore: {},
+    studentExamError: "",
+    remainingTime: {},
+  };
+  return {
+    initialStateAuth,
+    initialStateLesson,
+    initialStateQuestion,
+    initialStateExam,
+    initialStateStudentExam,
+  };
 }
 
 export default UseInitialStates;
