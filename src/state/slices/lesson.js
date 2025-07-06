@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { signUp, logIn, verify } from "../act/actAuth";
 import UseInitialStates from "../../hooks/use-initial-state";
 import {
   addLesson,
@@ -30,7 +29,7 @@ export const lessonSlice = createSlice({
       })
       .addCase(addLesson.rejected, (state, action) => {
         state.loadingAddLessson = false;
-        state.lessonsError = action.payload.response.data.message;
+        state.lessonsError = action.payload?.response?.data?.message || action.payload?.message || 'An error occurred';
       })
       .addCase(updateLesson.pending, (state, action) => {
         state.loadingUpdateLesson = true;
@@ -41,7 +40,7 @@ export const lessonSlice = createSlice({
       })
       .addCase(updateLesson.rejected, (state, action) => {
         state.loadingUpdateLesson = false;
-        state.lessonsError = action.payload.response.data.message;
+        state.lessonsError = action.payload?.response?.data?.message || action.payload?.message || 'An error occurred';
       })
       .addCase(getLessonsAdmin.pending, (state, action) => {
         state.loadingGetLessonsAdmin = true;
@@ -53,7 +52,7 @@ export const lessonSlice = createSlice({
       })
       .addCase(getLessonsAdmin.rejected, (state, action) => {
         state.loadingGetLessonsAdmin = false;
-        state.lessonsError = action.payload.response.data.message;
+        state.lessonsError = action.payload?.response?.data?.message || action.payload?.message || 'An error occurred';
       })
       .addCase(getLessons.pending, (state, action) => {
         state.loadingGetLessons = true;
@@ -65,7 +64,7 @@ export const lessonSlice = createSlice({
       })
       .addCase(getLessons.rejected, (state, action) => {
         state.loadingGetLessons = false;
-        state.lessonsError = action.payload.response.data.message;
+        state.lessonsError = action.payload?.response?.data?.message || action.payload?.message || 'An error occurred';
       })
       .addCase(getLesson.pending, (state, action) => {
         state.loadingGetLesson = true;
@@ -77,7 +76,7 @@ export const lessonSlice = createSlice({
       })
       .addCase(getLesson.rejected, (state, action) => {
         state.loadingGetLesson = false;
-        state.lessonsError = action.payload.response.data.message;
+        state.lessonsError = action.payload?.response?.data?.message || action.payload?.message || 'An error occurred';
       })
       .addCase(getPurchasedLessons.pending, (state, action) => {
         state.loadingGetPurchased = true;
@@ -89,7 +88,7 @@ export const lessonSlice = createSlice({
       })
       .addCase(getPurchasedLessons.rejected, (state, action) => {
         state.loadingGetPurchased = false;
-        state.lessonsError = action.payload.response.data.message;
+        state.lessonsError = action.payload?.response?.data?.message || action.payload?.message || 'An error occurred';
       })
       .addCase(deleteLesson.pending, (state, action) => {
         state.loadingDeleteLesson = true;
@@ -100,20 +99,20 @@ export const lessonSlice = createSlice({
       })
       .addCase(deleteLesson.rejected, (state, action) => {
         state.loadingDeleteLesson = false;
-        state.lessonsError = action.payload.response.data.message;
+        state.lessonsError = action.payload?.response?.data?.message || action.payload?.message || 'An error occurred';
       })
       .addCase(payLesson.pending, (state, action) => {
         state.loadingpayLesson = true;
       })
       .addCase(payLesson.fulfilled, (state, action) => {
         state.loadingpayLesson = false;
-        state.lessonMessage = action.payload.message;
-        state.paymentUrl = action.payload.paymentUrl;
+        state.lessonMessage = action.payload.data.message;
+        state.paymentUrl = action.payload.data.paymentUrl;
         console.log(action.payload);
       })
       .addCase(payLesson.rejected, (state, action) => {
         state.loadingpayLesson = false;
-        state.lessonsError = action.payload.response.data.message;
+        state.lessonsError = action.payload?.response?.data?.message || action.payload?.message || 'An error occurred';
       });
   },
 });

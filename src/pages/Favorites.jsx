@@ -49,7 +49,7 @@ const Favorites = () => {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {favorites.map((course, index) => (
-              <CourseCard key={course.id} course={course} index={index} />
+              <CourseCard key={course.id || `course-${index}`} course={course} index={index} />
             ))}
           </div>
         )}

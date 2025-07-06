@@ -103,7 +103,7 @@ export const payLesson = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
 
     try {
-      const res = await eduAPI.delete(`lesson/pay/${lessonId}`, {
+      const res = await eduAPI.post(`lesson/pay/${lessonId}`, {}, {
         headers: {
           token: localStorage.getItem("token"), // or 'Authorization': `Bearer ${token}` if using Bearer format
         },
@@ -177,7 +177,7 @@ export const getLessons = createAsyncThunk(
       if (priceMax) params.priceMax = priceMax;
       if (scheduledAfter) params.scheduledAfter = scheduledAfter;
       if (page) params.page = page;
-      if (limit) params.limit = page;
+      if (limit) params.limit = limit;
 
       // Convert params object to query string
       const queryString = new URLSearchParams(params).toString();

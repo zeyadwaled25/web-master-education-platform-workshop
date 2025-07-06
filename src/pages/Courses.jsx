@@ -171,12 +171,13 @@ import FilterSidebar from '../components/FilterSidebar/FilterSidebar';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 import { getLessons } from '../state/act/actLessons';
+import { mockCourses } from '../data/testData';
 
 const Courses = () => {
   const dispatch = useDispatch();
 
   // Redux state
-const { lessons, loadingGetLessons, lessonsError } = useSelector(state => state.lessons);
+  const { lessons, loadingGetLessons, lessonsError } = useSelector(state => state.lessons);
 
   // UI states
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -186,9 +187,12 @@ const { lessons, loadingGetLessons, lessonsError } = useSelector(state => state.
   const [rating, setRating] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+  // mock data
+  const newfeaturedCourses = mockCourses;
+
   // Fetch lessons from backend
   useEffect(() => {
-    dispatch(getLessons());
+    dispatch(getLessons({}));
   }, [dispatch]);
 
   // Filter lessons whenever dependencies change
@@ -203,37 +207,37 @@ const { lessons, loadingGetLessons, lessonsError } = useSelector(state => state.
 
     if (searchQuery) {
       filtered = filtered.filter(course =>
-        course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.description.toLowerCase().includes(searchQuery.toLowerCase())
+        (course.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (course.description || '').toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     if (selectedCategory !== 'All') {
-      filtered = filtered.filter(course => course.category === selectedCategory);
+      filtered = filtered.filter(course => (course.category || 'Uncategorized') === selectedCategory);
     }
 
     if (priceRange !== 'all') {
       switch (priceRange) {
         case 'free':
-          filtered = filtered.filter(course => course.price === 0);
+          filtered = filtered.filter(course => (course.price || 0) === 0);
           break;
         case 'paid':
-          filtered = filtered.filter(course => course.price > 0);
+          filtered = filtered.filter(course => (course.price || 0) > 0);
           break;
         case 'under50':
-          filtered = filtered.filter(course => course.price < 50);
+          filtered = filtered.filter(course => (course.price || 0) < 50);
           break;
         case '50to100':
-          filtered = filtered.filter(course => course.price >= 50 && course.price <= 100);
+          filtered = filtered.filter(course => (course.price || 0) >= 50 && (course.price || 0) <= 100);
           break;
         case 'over100':
-          filtered = filtered.filter(course => course.price > 100);
+          filtered = filtered.filter(course => (course.price || 0) > 100);
           break;
       }
     }
 
     if (rating > 0) {
-      filtered = filtered.filter(course => course.rating >= rating);
+      filtered = filtered.filter(course => (course.rating || 0) >= rating);
     }
 
     setFilteredCourses(filtered);
@@ -294,7 +298,7 @@ const { lessons, loadingGetLessons, lessonsError } = useSelector(state => state.
 
       {/* Filter Sidebar */}
       <FilterSidebar
-categories={lessons && lessons.length > 0 ? [...new Set(lessons.map(l => l.category))] : []}
+        categories={lessons && lessons.length > 0 ? [...new Set(lessons.map(l => l.category || 'Uncategorized'))] : []}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
         priceRange={priceRange}
@@ -306,7 +310,7 @@ categories={lessons && lessons.length > 0 ? [...new Set(lessons.map(l => l.categ
       />
 
       {/* Course Grid */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* <div className="max-w-7xl mx-auto px-4 py-8">
         {filteredCourses.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No courses found matching your criteria.</p>
@@ -314,7 +318,21 @@ categories={lessons && lessons.length > 0 ? [...new Set(lessons.map(l => l.categ
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredCourses.map((course, index) => (
-              <Cours eCard key={course.id} course={course} index={index} />
+              <CourseCard key={course.id || `course-${index}`} course={course} index={index} />
+            ))}
+          </div>
+        )}
+      </div> */}
+      {/* Course Grid */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {newfeaturedCourses.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No courses found matching your criteria.</p>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {newfeaturedCourses.map((course, index) => (
+              <CourseCard key={course.id || `course-${index}`} course={course} index={index} />
             ))}
           </div>
         )}
