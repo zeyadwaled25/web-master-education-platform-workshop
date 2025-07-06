@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import authImg from "../../assets/images/auth.jpg";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -21,12 +22,12 @@ const LoginSchema = Yup.object().shape({
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loadingAuth, authMessage, error } = useSelector(
+  const { loadingAuth, authMessage, error, token } = useSelector(
     (state) => state.auth
   );
 
   useEffect(() => {
-    if (authMessage?.toLowerCase().includes("success")) {
+    if (token) {
       setTimeout(() => {
         navigate("/home");
       }, 1500);
@@ -43,6 +44,9 @@ function Login() {
       <div className="bg-white">
         <img src={authImg} alt="Login illustration" />
       </div>
+      <Helmet>
+        <title>LearnHub - Login</title>
+      </Helmet>
       <div className="bg-white p-8 w-full">
         <h2 className="text-4xl font-bold mb-6 text-center text-blue-600">
           Login
@@ -55,7 +59,9 @@ function Login() {
           }}
           validationSchema={LoginSchema}
           onSubmit={(values) => {
-            dispatch(logIn(values));
+            dispatch(logIn(values))
+              .unwrap()
+              .then(() => navigate("/home"));
           }}
         >
           {() => (

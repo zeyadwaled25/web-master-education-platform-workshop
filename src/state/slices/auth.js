@@ -17,6 +17,7 @@ export const authSlice = createSlice({
     handlelogOutState: (state) => {
       localStorage.removeItem("token");
       state.token = "";
+      state.authMessage = "";
     },
   },
   extraReducers: (builder) => {

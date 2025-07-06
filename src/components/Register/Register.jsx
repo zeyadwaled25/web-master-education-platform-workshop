@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import authImg from "../../assets/images/auth.jpg";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
 
 const SignupSchema = Yup.object().shape({
   fullName: Yup.string().required("Full name is required"),
@@ -49,6 +50,9 @@ function Register() {
       className="min-h-screen md:flex-row flex items-center justify-center sm:flex-col"
     >
       <div className="bg-white">
+        <Helmet>
+          <title>LearnHub - Register</title>
+        </Helmet>
         <img src={authImg} alt="" />
       </div>
       <div className="bg-white p-8 w-full">
