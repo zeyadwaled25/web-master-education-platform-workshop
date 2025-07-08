@@ -103,11 +103,15 @@ export const payLesson = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
 
     try {
-      const res = await eduAPI.post(`lesson/pay/${lessonId}`, {}, {
-        headers: {
-          token: localStorage.getItem("token"), // or 'Authorization': `Bearer ${token}` if using Bearer format
-        },
-      });
+      const res = await eduAPI.post(
+        `lesson/pay/${lessonId}`,
+        {},
+        {
+          headers: {
+            token: localStorage.getItem("token"), // or 'Authorization': `Bearer ${token}` if using Bearer format
+          },
+        }
+      );
       console.log("from slice res is");
       console.log(res);
       return res;
@@ -151,39 +155,40 @@ export const getLessonsAdmin = createAsyncThunk(
 export const getLessons = createAsyncThunk(
   "lessonSlice/getLessons",
   async (
-    {
-      isPaid,
-      title,
-      sortBy,
-      sortOrder,
-      priceMin,
-      priceMax,
-      scheduledAfter,
-      limit,
-      page,
-    },
+    _,
+    // {
+    //   isPaid,
+    //   title,
+    //   sortBy,
+    //   sortOrder,
+    //   priceMin,
+    //   priceMax,
+    //   scheduledAfter,
+    //   limit,
+    //   page,
+    // }
     thunkAPI
   ) => {
     const { rejectWithValue } = thunkAPI;
 
     try {
       // Build query parameters object, only including truthy values
-      const params = {};
-      if (isPaid !== undefined && isPaid !== null) params.isPaid = isPaid; // Handle boolean false
-      if (title) params.title = title;
-      if (sortBy) params.sortBy = sortBy;
-      if (sortOrder) params.sortOrder = sortOrder;
-      if (priceMin) params.priceMin = priceMin;
-      if (priceMax) params.priceMax = priceMax;
-      if (scheduledAfter) params.scheduledAfter = scheduledAfter;
-      if (page) params.page = page;
-      if (limit) params.limit = limit;
+      // const params = {};
+      // if (isPaid !== undefined && isPaid !== null) params.isPaid = isPaid; // Handle boolean false
+      // if (title) params.title = title;
+      // if (sortBy) params.sortBy = sortBy;
+      // if (sortOrder) params.sortOrder = sortOrder;
+      // if (priceMin) params.priceMin = priceMin;
+      // if (priceMax) params.priceMax = priceMax;
+      // if (scheduledAfter) params.scheduledAfter = scheduledAfter;
+      // if (page) params.page = page;
+      // if (limit) params.limit = page;
 
-      // Convert params object to query string
-      const queryString = new URLSearchParams(params).toString();
-      const url = queryString ? `lesson/?${queryString}` : "lesson";
+      // // Convert params object to query string
+      // const queryString = new URLSearchParams(params).toString();
+      // const url = queryString ? `lesson/?${queryString}` : "";
 
-      const res = await eduAPI.get(url, {
+      const res = await eduAPI.get("lesson/", {
         headers: {
           token: localStorage.getItem("token"),
         },
@@ -193,6 +198,7 @@ export const getLessons = createAsyncThunk(
       console.log(res);
       return res;
     } catch (error) {
+      console.log("error", error);
       return rejectWithValue(error);
     }
   }

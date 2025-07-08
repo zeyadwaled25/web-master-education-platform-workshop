@@ -1,4 +1,3 @@
-// Mock data for development
 export const mockCourses = [
   {
     id: 1,
