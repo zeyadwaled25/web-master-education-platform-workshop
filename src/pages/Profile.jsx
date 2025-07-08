@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { Helmet } from 'react-helmet';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const [tab, setTab] = useState('info');
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -46,7 +46,7 @@ const Profile = () => {
           <title>Profile - LearnHub</title>
           <meta name="description" content="View and edit your profile information on LearnHub." />
         </Helmet>
-        {/* Sidebar Card */}
+   
         <div className="bg-white shadow-md rounded-xl p-6 text-center">
           <div className="relative w-28 h-28 mx-auto mb-4">
             <img
@@ -70,9 +70,7 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Main Area */}
         <div className="md:col-span-3 bg-white shadow-md rounded-xl p-6">
-          {/* Tabs */}
           <div className="flex space-x-4 border-b mb-6 pb-2">
             <button
               onClick={() => setTab('info')}
@@ -96,7 +94,6 @@ const Profile = () => {
             </button>
           </div>
 
-          {/* Tab Content */}
           {tab === 'info' ? (
             <form onSubmit={handleProfileUpdate} className="space-y-4">
               <div className="flex items-center justify-between">

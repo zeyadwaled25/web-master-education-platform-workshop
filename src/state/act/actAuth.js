@@ -67,7 +67,7 @@ export const resetPassword = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
 
     try {
-      const res = await eduAPI.post(`user/forgot-password`, data);
+      const res = await eduAPI.post(`user/reset-password`, data);
       console.log("from slice res is");
       console.log(res);
       return res;

@@ -26,6 +26,7 @@ export const authSlice = createSlice({
       .addCase(signUp.pending, (state, action) => {
         state.loadingAuth = true;
         state.error = "";
+        state.authMessage = "";
       })
       .addCase(signUp.fulfilled, (state, action) => {
         state.loadingAuth = false;
@@ -36,10 +37,12 @@ export const authSlice = createSlice({
       .addCase(signUp.rejected, (state, action) => {
         state.error = action.payload.response.data.message;
         state.loadingAuth = false;
+        state.authMessage = "";
       })
       .addCase(logIn.pending, (state, action) => {
         state.loadingAuth = true;
         state.error = "";
+        state.authMessage = "";
       })
       .addCase(logIn.fulfilled, (state, action) => {
         state.loadingAuth = false;
@@ -52,10 +55,12 @@ export const authSlice = createSlice({
       .addCase(logIn.rejected, (state, action) => {
         state.error = action.payload.response.data.message;
         state.loadingAuth = false;
+        state.authMessage = "";
       })
       .addCase(verify.pending, (state, action) => {
         state.loadingAuth = true;
         state.error = "";
+        state.authMessage = "";
       })
       .addCase(verify.fulfilled, (state, action) => {
         state.loadingAuth = false;
@@ -65,10 +70,12 @@ export const authSlice = createSlice({
       .addCase(verify.rejected, (state, action) => {
         state.error = action.payload.response.data.message;
         state.loadingAuth = false;
+        state.authMessage = "";
       })
       .addCase(forgotPassword.pending, (state, action) => {
         state.loadingAuth = true;
         state.error = "";
+        state.authMessage = "";
       })
       .addCase(forgotPassword.fulfilled, (state, action) => {
         state.loadingAuth = false;
@@ -78,10 +85,12 @@ export const authSlice = createSlice({
       .addCase(forgotPassword.rejected, (state, action) => {
         state.error = action.payload.response.data.message;
         state.loadingAuth = false;
+        state.authMessage = "";
       })
       .addCase(resetPassword.pending, (state, action) => {
         state.loadingAuth = true;
         state.error = "";
+        state.authMessage = "";
       })
       .addCase(resetPassword.fulfilled, (state, action) => {
         state.loadingAuth = false;
@@ -91,6 +100,7 @@ export const authSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         state.error = action.payload.response.data.message;
         state.loadingAuth = false;
+        state.authMessage = "";
       });
   },
 });
