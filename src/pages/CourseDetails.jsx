@@ -1,42 +1,49 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { mockCourses } from '../data/testData';
-import { useFavorites } from '../context/FavoriteContext';
-import RatingStars from '../components/RatingStars/RatingStars';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useFavorites } from "../context/FavoriteContext";
+import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 
-
-import { 
-  Star, 
-  Users, 
-  Clock, 
-  Award, 
-  Heart, 
-  Play, 
-  Download,
+import {
+  Award,
+  Heart,
+  Play,
   ChevronDown,
-  ChevronUp
-} from 'lucide-react';
-import { Helmet } from 'react-helmet';
+  ChevronUp,
+  Calendar,
+  DollarSign,
+  GraduationCap,
+} from "lucide-react";
+import { Helmet } from "react-helmet";
+import { useDispatch, useSelector } from "react-redux";
+import { getLesson } from "../state/act/actLessons";
 
 const CourseDetails = () => {
   const { id } = useParams();
-  const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [expandedSection, setExpandedSection] = useState('content');
+  const [expandedSection, setExpandedSection] = useState("content");
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+  const { specificLesson, loadingGetLesson } = useSelector(
+    (state) => state.lessons
+  );
+  const [purchased, setPurchased] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const foundCourse = mockCourses.find(c => c.id === parseInt(id));
-      setCourse(foundCourse);
-      setLoading(false);
-    }, 1000);
-  }, [id]);
+    dispatch(getLesson({ lessonId: id }))
+      .unwrap()
+      .then(() => {
+        setPurchased(true);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        if (error.status === 403) {
+          console.log(error.status);
+          setPurchased(false);
+        }
+      });
+  }, [id, dispatch]);
 
-  if (loading) {
+  if (loadingGetLesson) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="xl" />
@@ -44,11 +51,13 @@ const CourseDetails = () => {
     );
   }
 
-  if (!course) {
+  if (!purchased) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Course Not Found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            You have not purchased this course yet
+          </h2>
           <Link to="/courses" className="text-blue-600">
             Back to Courses
           </Link>
@@ -57,19 +66,47 @@ const CourseDetails = () => {
     );
   }
 
-  const favorited = isFavorite(course.id);
+  if (!specificLesson) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Course Not Found
+          </h2>
+          <Link to="/courses" className="text-blue-600">
+            Back to Courses
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const favorited = isFavorite(specificLesson._id);
 
   const handleFavoriteClick = () => {
     if (favorited) {
-      removeFromFavorites(course.id);
+      removeFromFavorites(specificLesson._id);
     } else {
-      addToFavorites(course);
+      addToFavorites(specificLesson);
     }
   };
 
-  const relatedCourses = mockCourses.filter(c => 
-    c.id !== course.id && c.category === course.category
-  ).slice(0, 3);
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getYouTubeVideoId = (url) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const videoId = getYouTubeVideoId(specificLesson.video);
+  const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
 
   return (
     <motion.div
@@ -78,91 +115,102 @@ const CourseDetails = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-gray-50"
     >
-      {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
         <Helmet>
-          <title>{course.title} - LearnHub</title>
-          <meta name="description" content={course.description} />
+          <title>{specificLesson.title} - LearnHub</title>
+          <meta name="description" content={specificLesson.description} />
         </Helmet>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  {course.category}
+                  {specificLesson.classLevel}
                 </span>
                 <span className="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
-                  {course.level}
+                  {specificLesson.isPaid ? 'Paid' : 'Free'}
                 </span>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                {course.title}
+                {specificLesson.title}
               </h1>
               <p className="text-xl mb-6 text-blue-100">
-                {course.description}
+                {specificLesson.description}
               </p>
               <div className="flex items-center space-x-6 mb-6">
                 <div className="flex items-center space-x-2">
-                  <RatingStars rating={course.rating} size="md" />
-                  <span className="text-sm">({course.students.toLocaleString()} students)</span>
+                  <Calendar className="h-5 w-5" />
+                  <span className="text-sm">
+                    Scheduled: {formatDate(specificLesson.scheduledDate)}
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5" />
-                  <span className="text-sm">{course.duration}</span>
+                  <GraduationCap className="h-5 w-5" />
+                  <span className="text-sm">{specificLesson.classLevel}</span>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
-                  <span className="text-3xl font-bold">${course.price}</span>
-                  {course.originalPrice && (
-                    <span className="text-xl text-blue-200 line-through">
-                      ${course.originalPrice}
-                    </span>
-                  )}
+                  <DollarSign className="h-6 w-6" />
+                  <span className="text-3xl font-bold">${specificLesson.price}</span>
                 </div>
-                <span className="text-sm text-blue-100">by {course.instructor}</span>
               </div>
             </div>
             <div className="relative">
-              <img
-                src={course.image}
-                alt={course.title}
-                className="w-full h-64 object-cover rounded-lg shadow-lg"
-              />
+              {thumbnailUrl ? (
+                <img
+                  src={thumbnailUrl}
+                  alt={specificLesson.title}
+                  className="w-full h-64 object-cover rounded-lg shadow-lg"
+                />
+              ) : (
+                <div className="w-full h-64 bg-gray-600 rounded-lg shadow-lg flex items-center justify-center">
+                  <Play className="h-16 w-16 text-white" />
+                </div>
+              )}
               <div className="absolute inset-0 bg-black bg-opacity-40 rounded-lg flex items-center justify-center">
-                <Play className="h-16 w-16 text-white" />
+                <a
+                  href={specificLesson.video}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-full hover:bg-opacity-30 transition-all"
+                >
+                  <Play className="h-8 w-8 text-white ml-1" />
+                </a>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Action Buttons */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4">
-              <Link
-                to={`/checkout/${course.id}`}
-                className="border rounded-lg border-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3 text-lg"
+              <a
+                href={specificLesson.video}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors"
               >
-                Enroll Now
-              </Link>
+                Watch Video
+              </a>
               <button
                 onClick={handleFavoriteClick}
                 className={`p-3 rounded-lg transition-colors ${
                   favorited
-                    ? 'bg-red-500 text-white hover:bg-red-600'
-                    : 'bg-gray-200 text-gray-600 hover:bg-red-50 hover:text-red-500'
+                    ? "bg-red-500 text-white hover:bg-red-600"
+                    : "bg-gray-200 text-gray-600 hover:bg-red-50 hover:text-red-500"
                 }`}
               >
-                <Heart className={`h-5 w-5 ${favorited ? 'fill-current' : ''}`} />
+                <Heart
+                  className={`h-5 w-5 ${favorited ? "fill-current" : ""}`}
+                />
               </button>
             </div>
             <div className="flex items-center space-x-4 text-sm text-gray-600">
               <div className="flex items-center space-x-1">
-                <Users className="h-4 w-4" />
-                <span>{course.students.toLocaleString()} enrolled</span>
+                <Calendar className="h-4 w-4" />
+                <span>Scheduled: {formatDate(specificLesson.scheduledDate)}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <Award className="h-4 w-4" />
@@ -173,109 +221,147 @@ const CourseDetails = () => {
         </div>
       </div>
 
-      {/* Course Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-3 gap-12">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Course Content */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <button
-                onClick={() => setExpandedSection(expandedSection === 'content' ? '' : 'content')}
+                onClick={() =>
+                  setExpandedSection(
+                    expandedSection === "content" ? "" : "content"
+                  )
+                }
                 className="w-full flex items-center justify-between text-left"
               >
-                <h2 className="text-2xl font-bold text-gray-900">Course Content</h2>
-                {expandedSection === 'content' ? (
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Lesson Content
+                </h2>
+                {expandedSection === "content" ? (
                   <ChevronUp className="h-5 w-5 text-gray-500" />
                 ) : (
                   <ChevronDown className="h-5 w-5 text-gray-500" />
                 )}
               </button>
-              {expandedSection === 'content' && (
-                <div className="mt-6 space-y-4">
-                  {course.lessons.map((lesson, index) => (
-                    <div key={lesson.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="text-sm font-medium text-blue-600">{index + 1}</span>
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900">{lesson.title}</h3>
-                          <p className="text-sm text-gray-500">{lesson.type} • {lesson.duration}</p>
-                        </div>
+              {expandedSection === "content" && (
+                <div className="mt-6">
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <Play className="h-4 w-4 text-blue-600" />
                       </div>
-                      <Play className="h-5 w-5 text-gray-400" />
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          {specificLesson.title}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Video Lesson • {specificLesson.classLevel}
+                        </p>
+                      </div>
                     </div>
-                  ))}
+                    <a
+                      href={specificLesson.video}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      <Play className="h-5 w-5" />
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
-
-            {/* What You'll Learn */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">What You'll Learn</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {course.features.map((feature, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <div className="flex-shrink-0 w-5 h-5 bg-success-100 rounded-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-success-500 rounded-full"></div>
-                    </div>
-                    <span className="text-gray-700">{feature}</span>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                What You'll Learn
+              </h2>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Instructor Info */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Instructor</h2>
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-blue-600">
-                    {course.instructor.split(' ').map(n => n[0]).join('')}
+                  <span className="text-gray-700">
+                    Understand the fundamental concepts of ratios and proportions
                   </span>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">{course.instructor}</h3>
-                  <p className="text-gray-600">Senior Software Engineer</p>
-                  <div className="flex items-center space-x-4 mt-2">
-                    <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm text-gray-600">4.9 instructor rating</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Users className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">15,000+ students</span>
-                    </div>
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   </div>
+                  <span className="text-gray-700">
+                    Learn how to apply ratios and proportions in real-world scenarios
+                  </span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  </div>
+                  <span className="text-gray-700">
+                    Master cross multiplication techniques for solving proportion problems
+                  </span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  </div>
+                  <span className="text-gray-700">
+                    Build confidence in mathematical problem-solving skills
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Lesson Details
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Class Level</h3>
+                  <p className="text-gray-600">{specificLesson.classLevel}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Price</h3>
+                  <p className="text-gray-600">${specificLesson.price}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Scheduled Date</h3>
+                  <p className="text-gray-600">{formatDate(specificLesson.scheduledDate)}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Access Type</h3>
+                  <p className="text-gray-600">{specificLesson.isPaid ? 'Paid Access' : 'Free Access'}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-8">
-            {/* Course Features */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">This course includes:</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                This lesson includes:
+              </h3>
               <div className="space-y-3">
-                {[
-                  { icon: Clock, text: `${course.duration} on-demand video` },
-                  { icon: Download, text: 'Downloadable resources' },
-                  { icon: Award, text: 'Certificate of completion' },
-                  { icon: Users, text: 'Full lifetime access' },
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <item.icon className="h-5 w-5 text-blue-600" />
-                    <span className="text-gray-700">{item.text}</span>
-                  </div>
-                ))}
+                <div className="flex items-center space-x-3">
+                  <Play className="h-5 w-5 text-blue-600" />
+                  <span className="text-gray-700">Video lesson content</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-5 w-5 text-blue-600" />
+                  <span className="text-gray-700">Scheduled learning session</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Award className="h-5 w-5 text-blue-600" />
+                  <span className="text-gray-700">Certificate of completion</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <GraduationCap className="h-5 w-5 text-blue-600" />
+                  <span className="text-gray-700">Grade-level appropriate content</span>
+                </div>
               </div>
             </div>
-
-            {/* Share */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Share this course</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Share this lesson
+              </h3>
               <div className="flex space-x-2">
                 <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
                   Facebook
@@ -287,32 +373,6 @@ const CourseDetails = () => {
             </div>
           </div>
         </div>
-
-        {/* Related Courses */}
-        {relatedCourses.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Related Courses</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedCourses.map((relatedCourse, index) => (
-                <div key={relatedCourse.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  <img
-                    src={relatedCourse.image}
-                    alt={relatedCourse.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{relatedCourse.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{relatedCourse.instructor}</p>
-                    <div className="flex items-center justify-between">
-                      <RatingStars rating={relatedCourse.rating} size="sm" />
-                      <span className="text-lg font-bold text-blue-600">${relatedCourse.price}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </motion.div>
   );

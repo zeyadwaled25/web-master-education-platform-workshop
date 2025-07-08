@@ -16,7 +16,6 @@ const FilterSidebar = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -24,8 +23,6 @@ const FilterSidebar = ({
             className="fixed inset-0 bg-black bg-opacity-50 z-40"
             onClick={onClose}
           />
-
-          {/* Sidebar */}
           <motion.div
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
@@ -33,7 +30,6 @@ const FilterSidebar = ({
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className="fixed left-0 top-0 h-full w-80 bg-white shadow-lg z-50 overflow-y-auto"
           >
-            {/* Header */}
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
@@ -49,9 +45,7 @@ const FilterSidebar = ({
               </div>
             </div>
 
-            {/* Body */}
             <div className="p-6 space-y-6">
-              {/* Categories */}
               <div>
                 <h3 className="text-sm font-medium text-gray-900 mb-3">Categories</h3>
                 <div className="space-y-2">
@@ -70,8 +64,6 @@ const FilterSidebar = ({
                   ))}
                 </div>
               </div>
-
-              {/* Price Range */}
               <div>
                 <h3 className="text-sm font-medium text-gray-900 mb-3">Price Range</h3>
                 <div className="space-y-2">
@@ -98,7 +90,6 @@ const FilterSidebar = ({
                 </div>
               </div>
 
-              {/* Rating */}
               <div>
                 <h3 className="text-sm font-medium text-gray-900 mb-3">Rating</h3>
                 <div className="space-y-2">
