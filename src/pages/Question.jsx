@@ -7,6 +7,8 @@ const AdminQuestionPanel = () => {
   const { id: examId } = useParams();
   const [exam, setExam] = useState(null);
   const [questions, setQuestions] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+
   const [form, setForm] = useState({
     text: "",
     type: "multiple-choice",
@@ -50,6 +52,7 @@ const AdminQuestionPanel = () => {
   useEffect(() => {
     fetchExam();
     fetchQuestions();
+    
   }, [examId]);
 
   const handleSubmit = async (e) => {
@@ -68,15 +71,23 @@ const AdminQuestionPanel = () => {
     }
 
     try {
-      await axios.post(
-        "https://edu-master-delta.vercel.app/question",
-        dataToSend,
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        }
-      );
+      if (editingId) {
+        // Update question
+        await handleUpdateQuestion(editingId, dataToSend);
+        setEditingId(null);
+      } else {
+        // Add new question
+        await axios.post(
+          "https://edu-master-delta.vercel.app/question",
+          dataToSend,
+          {
+            headers: {
+              token: localStorage.getItem("token"),
+            },
+          }
+        );
+      }
+
       setForm({
         text: "",
         type: "multiple-choice",
@@ -86,7 +97,44 @@ const AdminQuestionPanel = () => {
       });
       fetchQuestions();
     } catch (err) {
-      console.error("Failed to add question", err);
+      console.error("Failed to add/update question", err);
+    }
+  };
+
+  const handleDeleteQuestion = async (questionId) => {
+    try {
+      await axios.delete(
+        `https://edu-master-delta.vercel.app/question/${questionId}`,
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        }
+      );
+      alert("✅ Question deleted successfully.");
+      fetchQuestions(); // Refresh question list after deletion
+    } catch (err) {
+      console.error("Failed to delete question", err);
+      alert("❌ Failed to delete the question. Please try again.");
+    }
+  };
+
+  const handleUpdateQuestion = async (questionId, updatedData) => {
+    try {
+      await axios.put(
+        `https://edu-master-delta.vercel.app/question/${questionId}`,
+        updatedData,
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        }
+      );
+      alert("✅ Question updated successfully.");
+      fetchQuestions(); // Refresh questions
+    } catch (err) {
+      console.error("Failed to update question", err);
+      alert("❌ Failed to update question. Please try again.");
     }
   };
 
@@ -162,8 +210,14 @@ const AdminQuestionPanel = () => {
               }
               className="w-full border-b border-blue-400 p-2 bg-transparent focus:outline-none"
             />
-            <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
-              Add Question
+            <button
+              className={`w-full text-white py-3 rounded-lg transition ${
+                editingId
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              {editingId ? "Update Question" : "Add Question"}
             </button>
           </form>
         </div>
@@ -180,7 +234,7 @@ const AdminQuestionPanel = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="p-4 bg-white border border-blue-100 rounded-xl shadow hover:shadow-md"
+                  className="relative   p-4 bg-white border border-blue-100 rounded-xl shadow hover:shadow-md"
                 >
                   <p className="text-lg text-blue-800 font-semibold mb-1">
                     {q.text}
@@ -198,6 +252,30 @@ const AdminQuestionPanel = () => {
                   <p className="text-sm mt-2 text-green-700 font-semibold">
                     ✔ Correct: {q.correctAnswer}
                   </p>
+                  <div className="flex flex-col items-end gap-1 absolute top-2 right-2">
+                    <button
+                      onClick={() => {
+                        setForm({
+                          text: q.text,
+                          type: q.type,
+                          options: q.options || ["", "", "", ""],
+                          correctAnswer: q.correctAnswer,
+                          points: q.points,
+                        });
+                        setEditingId(q._id);
+                      }}
+                      className="text-blue-600 hover:text-blue-800 text-sm"
+                    >
+                      ✏️ Edit
+                    </button>
+
+                    <button
+                      onClick={() => handleDeleteQuestion(q._id)}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      🗑 Delete
+                    </button>
+                  </div>
                 </motion.div>
               ))}
             </div>

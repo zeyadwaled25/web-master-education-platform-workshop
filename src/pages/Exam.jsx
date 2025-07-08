@@ -10,7 +10,7 @@ const AdminExamPanel = () => {
     title: "",
     description: "",
     duration: "",
-    classLevel: "",
+    classLevel: "", 
     isPublished: false,
     startDate: "",
     endDate: "",
@@ -84,7 +84,18 @@ const AdminExamPanel = () => {
       endDate: exam.endDate?.slice(0, 16),
     });
   };
-
+  const handleDelete = async (examId) => {
+    try {
+      await axios.delete(`https://edu-master-delta.vercel.app/exam/${examId}`, {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      });
+      fetchExams();
+    } catch (err) {
+      console.error("Failed to delete exam", err);
+    }
+  };
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -201,12 +212,19 @@ const AdminExamPanel = () => {
                     >
                       <Pencil size={16} /> Edit
                     </button>
+
                     <Link
                       to={`/exams/${exam._id}`}
                       className="text-blue-600 hover:text-blue-800 text-sm underline"
                     >
                       Add Questions
                     </Link>
+                    <button
+                      onClick={() => handleDelete(exam._id)}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      🗑 Delete
+                    </button>
                   </div>
                 </div>
               </motion.div>
