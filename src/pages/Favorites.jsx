@@ -15,7 +15,6 @@ const Favorites = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-gray-50"
     >
-      {/* Header */}
       <div className="bg-white shadow-sm">
         <Helmet>
           <title>My Favorites - LearnHub</title>

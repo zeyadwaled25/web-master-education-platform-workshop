@@ -1,9 +1,16 @@
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Users, Award, TrendingUp, Star } from 'lucide-react';
-import CourseCard from '../components/CourseCard/CourseCard';
-import { mockCourses, mockTestimonials } from '../data/testData';
-import { Helmet } from 'react-helmet';
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  BookOpen,
+  Users,
+  Award,
+  TrendingUp,
+  Star,
+} from "lucide-react";
+import CourseCard from "../components/CourseCard/CourseCard";
+import { mockCourses, mockTestimonials } from "../data/testData";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   const featuredCourses = mockCourses.slice(0, 3);
@@ -15,12 +22,14 @@ const Home = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen"
     >
-      {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-      <Helmet>
-        <title>Home - LearnHub</title>
-        <meta name="description" content="Discover a variety of courses to enhance your skills and advance your career." />
-      </Helmet>
+        <Helmet>
+          <title>Home - LearnHub</title>
+          <meta
+            name="description"
+            content="Discover a variety of courses to enhance your skills and advance your career."
+          />
+        </Helmet>
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
@@ -41,8 +50,8 @@ const Home = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto"
             >
-              Unlock your potential with expert-led courses in technology, design, and business.
-              Start your learning journey today.
+              Unlock your potential with expert-led courses in technology,
+              design, and business. Start your learning journey today.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -68,15 +77,14 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { icon: Users, label: 'Students', value: '50,000+' },
-              { icon: BookOpen, label: 'Courses', value: '1,200+' },
-              { icon: Award, label: 'Certificates', value: '25,000+' },
-              { icon: TrendingUp, label: 'Success Rate', value: '98%' },
+              { icon: Users, label: "Students", value: "50,000+" },
+              { icon: BookOpen, label: "Courses", value: "1,200+" },
+              { icon: Award, label: "Certificates", value: "25,000+" },
+              { icon: TrendingUp, label: "Success Rate", value: "98%" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -88,7 +96,9 @@ const Home = () => {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
                   <stat.icon className="h-8 w-8 text-blue-600" />
                 </div>
-                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">
+                  {stat.value}
+                </div>
                 <div className="text-gray-600">{stat.label}</div>
               </motion.div>
             ))}
@@ -96,7 +106,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Courses */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -124,7 +133,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Why Choose Us */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -132,40 +140,47 @@ const Home = () => {
               Why Choose LearnHub?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We provide the best learning experience with cutting-edge technology and expert instruction
+              We provide the best learning experience with cutting-edge
+              technology and expert instruction
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 icon: BookOpen,
-                title: 'Expert Instructors',
-                description: 'Learn from industry professionals with years of real-world experience.',
+                title: "Expert Instructors",
+                description:
+                  "Learn from industry professionals with years of real-world experience.",
               },
               {
                 icon: Users,
-                title: 'Community Support',
-                description: 'Join a vibrant community of learners and get help when you need it.',
+                title: "Community Support",
+                description:
+                  "Join a vibrant community of learners and get help when you need it.",
               },
               {
                 icon: Award,
-                title: 'Certificates',
-                description: 'Earn recognized certificates to showcase your skills to employers.',
+                title: "Certificates",
+                description:
+                  "Earn recognized certificates to showcase your skills to employers.",
               },
               {
                 icon: TrendingUp,
-                title: 'Career Growth',
-                description: 'Advance your career with skills that are in high demand.',
+                title: "Career Growth",
+                description:
+                  "Advance your career with skills that are in high demand.",
               },
               {
                 icon: Star,
-                title: 'Quality Content',
-                description: 'Access high-quality, up-to-date content designed for maximum learning.',
+                title: "Quality Content",
+                description:
+                  "Access high-quality, up-to-date content designed for maximum learning.",
               },
               {
                 icon: ArrowRight,
-                title: 'Flexible Learning',
-                description: 'Learn at your own pace with lifetime access to course materials.',
+                title: "Flexible Learning",
+                description:
+                  "Learn at your own pace with lifetime access to course materials.",
               },
             ].map((feature, index) => (
               <motion.div
@@ -178,7 +193,9 @@ const Home = () => {
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
                   <feature.icon className="h-8 w-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {feature.title}
+                </h3>
                 <p className="text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
@@ -186,7 +203,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -194,7 +210,8 @@ const Home = () => {
               What Our Students Say
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Don't just take our word for it - hear from our successful students
+              Don't just take our word for it - hear from our successful
+              students
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -213,13 +230,18 @@ const Home = () => {
                     className="w-12 h-12 rounded-full object-cover mr-4"
                   />
                   <div>
-                    <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                    <h4 className="font-semibold text-gray-900">
+                      {testimonial.name}
+                    </h4>
                     <p className="text-sm text-gray-600">{testimonial.role}</p>
                   </div>
                 </div>
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                    <Star
+                      key={i}
+                      className="h-5 w-5 text-yellow-400 fill-current"
+                    />
                   ))}
                 </div>
                 <p className="text-gray-700">{testimonial.content}</p>

@@ -1,5 +1,3 @@
-import React from "react";
-
 function UseInitialStates() {
   const initialStateAuth = {
     loadingAuth: false,

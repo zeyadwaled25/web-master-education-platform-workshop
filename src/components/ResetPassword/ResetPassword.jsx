@@ -11,7 +11,9 @@ const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { authMessage, error, loadingAuth } = useSelector((state) => state.auth);
+  const { authMessage, error, loadingAuth } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     if (authMessage?.toLowerCase().includes("success")) {
@@ -23,7 +25,9 @@ const ResetPassword = () => {
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
-    otp: Yup.string().required("OTP is required").length(6, "OTP must be 6 digits"),
+    otp: Yup.string()
+      .required("OTP is required")
+      .length(6, "OTP must be 6 digits"),
     newPassword: Yup.string()
       .min(8, "Password too short")
       .matches(/[A-Z]/, "Must contain at least one uppercase letter")
@@ -51,7 +55,7 @@ const ResetPassword = () => {
         />
       </div>
 
-      <div className="bg-white p-8 w-full md:w-1/2">
+      <div className="bg-white p-8 w-full">
         <h2 className="text-3xl font-bold mb-4 text-center text-blue-600">
           Reset Password
         </h2>
@@ -68,6 +72,7 @@ const ResetPassword = () => {
           }}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
+            console.log(values);
             dispatch(resetPassword(values));
             setSubmitting(false);
           }}
@@ -105,7 +110,9 @@ const ResetPassword = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium">New Password</label>
+                <label className="block text-sm font-medium">
+                  New Password
+                </label>
                 <Field
                   name="newPassword"
                   type="password"
@@ -120,7 +127,9 @@ const ResetPassword = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Confirm Password</label>
+                <label className="block text-sm font-medium">
+                  Confirm Password
+                </label>
                 <Field
                   name="cpassword"
                   type="password"
@@ -134,7 +143,9 @@ const ResetPassword = () => {
                 />
               </div>
 
-              {loadingAuth && <p className="text-blue-500">Resetting password...</p>}
+              {loadingAuth && (
+                <p className="text-blue-500">Resetting password...</p>
+              )}
               {authMessage && <p className="text-green-600">{authMessage}</p>}
               {error && <p className="text-red-500">{error}</p>}
 
@@ -143,7 +154,9 @@ const ResetPassword = () => {
                 disabled={isSubmitting || loadingAuth}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"
               >
-                {isSubmitting || loadingAuth ? "Resetting..." : "Reset Password"}
+                {isSubmitting || loadingAuth
+                  ? "Resetting..."
+                  : "Reset Password"}
               </button>
             </Form>
           )}
