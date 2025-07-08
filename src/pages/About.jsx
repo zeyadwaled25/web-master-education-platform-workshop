@@ -118,7 +118,6 @@ const About = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-gray-50"
     >
-      {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white">
         <Helmet>
           <title>About Us - LearnHub</title>
@@ -146,8 +145,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Mission Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -207,8 +204,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Stats Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -241,8 +236,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Values Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -274,8 +267,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Team Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -314,8 +305,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Timeline Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -327,7 +316,6 @@ const About = () => {
             </p>
           </div>
           <div className="relative">
-            {/* Timeline line */}
             <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-blue-200 hidden md:block"></div>
 
             <div className="space-y-12">
@@ -356,8 +344,6 @@ const About = () => {
                       <p className="text-gray-600">{milestone.description}</p>
                     </div>
                   </div>
-
-                  {/* Timeline dot */}
                   <div className="relative z-10 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-lg hidden md:block"></div>
 
                   <div className="flex-1 hidden md:block"></div>
@@ -367,8 +353,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div

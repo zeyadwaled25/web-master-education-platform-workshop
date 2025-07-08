@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { BookOpen, TrendingUp, Award, Clock } from "lucide-react";
@@ -14,12 +14,15 @@ function TeacherDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userRes = await axios.get("https://edu-master-delta.vercel.app/user/", {
-          headers: {
-            token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlvdXNzZWZob3NzYW0yMDVAZ21haWwuY29tIiwiX2lkIjoiNjdkZTJjMTE2Zjk3NDlkOTUzNGUzODgzIiwiaWF0IjoxNzUxNzczNjQxLCJleHAiOjE3NTE4NjAwNDF9.UReKhSL4JHiJ1-QKCzXKr7JyT_8xM26ZrqNy3CYgCCs",
-          },
-        });
+        const userRes = await axios.get(
+          "https://edu-master-delta.vercel.app/user/",
+          {
+            headers: {
+              token:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlvdXNzZWZob3NzYW0yMDVAZ21haWwuY29tIiwiX2lkIjoiNjdkZTJjMTE2Zjk3NDlkOTUzNGUzODgzIiwiaWF0IjoxNzUxNzczNjQxLCJleHAiOjE3NTE4NjAwNDF9.UReKhSL4JHiJ1-QKCzXKr7JyT_8xM26ZrqNy3CYgCCs",
+            },
+          }
+        );
         setUser(userRes.data.data);
 
         const examRes = await axios.get(
@@ -33,7 +36,9 @@ function TeacherDashboard() {
         );
         setExamScores(examRes.data.data);
 
-        const lessonRes = await axios.get("https://edu-master-delta.vercel.app/lesson/my/purchased");
+        const lessonRes = await axios.get(
+          "https://edu-master-delta.vercel.app/lesson/my/purchased"
+        );
         setPurchasedLessons(lessonRes.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -46,9 +51,12 @@ function TeacherDashboard() {
   }, []);
 
   if (loading) return <p className="p-8">Loading...</p>;
-  if (!user) return <p className="p-8 text-red-500">Failed to load user data.</p>;
+  if (!user)
+    return <p className="p-8 text-red-500">Failed to load user data.</p>;
 
-  const fgasExams = examScores.filter(exam => exam.student?.fullName === user.fullName);
+  const fgasExams = examScores.filter(
+    (exam) => exam.student?.fullName === user.fullName
+  );
 
   const stats = [
     {
@@ -61,7 +69,7 @@ function TeacherDashboard() {
     },
     {
       title: "Completed Exams",
-      value: fgasExams.filter(e => e.isSubmitted).length,
+      value: fgasExams.filter((e) => e.isSubmitted).length,
       icon: Award,
       iconBg: "bg-success-100",
       iconColor: "text-success-600",
@@ -71,7 +79,9 @@ function TeacherDashboard() {
       title: "Avg. Score",
       value:
         fgasExams.length > 0
-          ? `${Math.round(fgasExams.reduce((acc, e) => acc + e.score, 0) / fgasExams.length)}%`
+          ? `${Math.round(
+              fgasExams.reduce((acc, e) => acc + e.score, 0) / fgasExams.length
+            )}%`
           : "0%",
       icon: TrendingUp,
       iconBg: "bg-accent-100",
@@ -95,10 +105,17 @@ function TeacherDashboard() {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-gray-50">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-gray-50"
+    >
       <Helmet>
         <title>Teacher Dashboard - LearnHub</title>
-        <meta name="description" content="Manage your courses and track student progress on LearnHub." />
+        <meta
+          name="description"
+          content="Manage your courses and track student progress on LearnHub."
+        />
       </Helmet>
 
       <div className="bg-white shadow-sm">
@@ -110,7 +127,9 @@ function TeacherDashboard() {
           />
           <div>
             <h1 className="text-3xl font-bold">Welcome, {user.fullName}</h1>
-            <p className="text-gray-600">Track your students' progress and manage your lessons</p>
+            <p className="text-gray-600">
+              Track your students' progress and manage your lessons
+            </p>
           </div>
         </div>
       </div>
@@ -128,7 +147,9 @@ function TeacherDashboard() {
               <p className="text-sm text-gray-600">{stat.title}</p>
               <p className="text-2xl font-bold">{stat.value}</p>
             </div>
-            <div className={`w-12 h-12 ${stat.iconBg} rounded-full flex items-center justify-center`}>
+            <div
+              className={`w-12 h-12 ${stat.iconBg} rounded-full flex items-center justify-center`}
+            >
               <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
             </div>
           </motion.div>
@@ -151,9 +172,15 @@ function TeacherDashboard() {
                   <div className="flex justify-between">
                     <div>
                       <h3 className="font-medium">{exam.exam?.title}</h3>
-                      <p className="text-sm text-gray-500">Student: {exam.student?.fullName}</p>
+                      <p className="text-sm text-gray-500">
+                        Student: {exam.student?.fullName}
+                      </p>
                     </div>
-                    <p className={`font-bold ${exam.score >= 50 ? "text-green-600" : "text-red-600"}`}>
+                    <p
+                      className={`font-bold ${
+                        exam.score >= 50 ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
                       {exam.score}%
                     </p>
                   </div>
@@ -178,7 +205,9 @@ function TeacherDashboard() {
                   className="bg-white p-4 rounded-lg shadow"
                 >
                   <h3 className="font-medium">{lesson.title}</h3>
-                  <p className="text-sm text-gray-500">Scheduled: {new Date(lesson.scheduledDate).toDateString()}</p>
+                  <p className="text-sm text-gray-500">
+                    Scheduled: {new Date(lesson.scheduledDate).toDateString()}
+                  </p>
                 </motion.div>
               ))
             ) : (

@@ -3,7 +3,8 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import authImg from "../../assets/images/auth.jpg"; 
+import authImg from "../../assets/images/auth.jpg";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [message, setMessage] = useState("");
@@ -12,7 +13,7 @@ const ForgotPassword = () => {
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Required"),
   });
-
+  const navigate = useNavigate();
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -21,13 +22,20 @@ const ForgotPassword = () => {
       className="min-h-screen flex items-center justify-center md:flex-row sm:flex-col"
     >
       <div className="hidden md:block bg-white">
-        <img src={authImg} alt="Forgot password illustration" className="h-full w-auto" />
+        <img
+          src={authImg}
+          alt="Forgot password illustration"
+          className="h-full w-auto"
+        />
       </div>
 
       <div className="bg-white p-8 w-full">
-        <h2 className="text-3xl font-bold mb-4 text-center text-blue-600">Forgot Password</h2>
+        <h2 className="text-3xl font-bold mb-4 text-center text-blue-600">
+          Forgot Password
+        </h2>
         <p className="text-gray-600 text-sm text-center mb-6">
-          Enter your email address and we’ll send you a link to reset your password.
+          Enter your email address and we’ll send you a link to reset your
+          password.
         </p>
 
         <Formik
@@ -39,8 +47,11 @@ const ForgotPassword = () => {
                 "https://edu-master-delta.vercel.app/user/forgot-password",
                 values
               );
-              setMessage(res.data.message || "Check your email for reset link.");
+              setMessage(
+                res.data.message || "Check your email for reset link."
+              );
               setError("");
+              navigate("/reset-password");
             } catch (err) {
               setError(err.response?.data?.message || "Something went wrong");
               setMessage("");
@@ -58,7 +69,11 @@ const ForgotPassword = () => {
                   placeholder="example@mail.com"
                   className="mt-1 p-2 w-full border rounded"
                 />
-                <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
               </div>
 
               {message && <p className="text-green-600">{message}</p>}

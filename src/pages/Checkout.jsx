@@ -14,7 +14,6 @@ const Checkout = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   useEffect(() => {
-    // Simulate API call
     setTimeout(() => {
       const foundCourse = mockCourses.find((c) => c.id === parseInt(courseId));
       setCourse(foundCourse);
@@ -26,7 +25,6 @@ const Checkout = () => {
     e.preventDefault();
     setProcessingPayment(true);
 
-    // Simulate payment processing
     setTimeout(() => {
       setProcessingPayment(false);
       setPaymentSuccess(true);
@@ -112,7 +110,6 @@ const Checkout = () => {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Course Summary */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Course Summary
@@ -184,8 +181,6 @@ const Checkout = () => {
                 </div>
               </div>
             </div>
-
-            {/* Payment Form */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center space-x-2 mb-6">
                 <Lock className="h-5 w-5 text-gray-400" />

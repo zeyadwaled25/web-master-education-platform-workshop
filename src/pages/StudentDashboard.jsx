@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { BookOpen, TrendingUp, Award, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { mockCourses, mockUser } from '../data/mockData';
+import { mockCourses, mockUser } from '../data/testData';
 import { Helmet } from 'react-helmet';
 
 const Dashboard = () => {
@@ -28,7 +28,6 @@ const Dashboard = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-gray-50"
     >
-      {/* Header */}
       <div className="bg-white shadow-sm">
         <Helmet>
           <title>Dashboard - LearnHub</title>
@@ -49,7 +48,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <motion.div
@@ -121,9 +119,7 @@ const Dashboard = () => {
           </motion.div>
         </div>
 
-        {/* Exams and Activity */}
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Exams & Scores */}
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Exams & Scores</h2>
             <div className="space-y-4">
@@ -155,8 +151,6 @@ const Dashboard = () => {
               )}
             </div>
           </div>
-
-          {/* Recent Activity & Quick Actions */}
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h2>
             <div className="bg-white rounded-lg shadow-md p-6">
